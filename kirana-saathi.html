@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f6f8f4" />
+<title>Kirana Saathi — Ordering Prototype</title>
+<style>
+  :root{--green:#176b4d;--green-dark:#10553b;--green-soft:#e5f3e8;--mint:#f4faf4;--ink:#16221b;--muted:#68766c;--line:#e4e9e1;--paper:#fff;--orange:#ef9b44;--danger:#bc4444;--shadow:0 10px 28px rgba(27,58,38,.08)}
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#eef2eb}
+  button,input,textarea{font:inherit}
+  button{cursor:pointer}
+  button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #8dc9a7;outline-offset:2px}
+  .shell{max-width:1180px;min-height:100dvh;margin:0 auto;display:grid;grid-template-columns:minmax(260px,1fr) minmax(360px,460px) minmax(230px,.8fr);gap:30px;align-items:center;padding:24px}
+  .intro{align-self:center;padding:8px 0 8px 12px}
+  .eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--green);display:flex;gap:8px;align-items:center}
+  .eyebrow:before{content:"";width:25px;height:2px;background:var(--orange);display:block}
+  .intro h1{font-size:clamp(30px,3.6vw,47px);line-height:1.04;letter-spacing:-.045em;margin:18px 0 15px;max-width:450px}
+  .intro p{font-size:15px;line-height:1.65;color:#59685d;max-width:405px;margin:0}
+  .feature-points{padding:0;list-style:none;margin:25px 0 0;display:grid;gap:13px;color:#33443a;font-size:13px}
+  .feature-points li{display:flex;gap:10px;align-items:center}
+  .tick{width:23px;height:23px;background:#e1f0e4;border-radius:8px;display:inline-grid;place-items:center;color:var(--green);font-weight:900;flex:none}
+  .phone-wrap{position:relative;width:100%;max-width:460px;justify-self:center}
+  .phone{height:min(880px,calc(100dvh - 36px));min-height:650px;border:8px solid #1a261f;border-radius:34px;background:#f8faf6;overflow:hidden;box-shadow:0 25px 75px rgba(15,42,26,.2);position:relative;display:flex;flex-direction:column}
+  .statusbar{height:22px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 15px;font-size:10px;font-weight:800;background:#fff;color:#26362c}
+  .app-top{background:#fff;padding:14px 16px 13px;border-bottom:1px solid var(--line);flex:none}
+  .brand-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .brand{display:flex;align-items:center;gap:9px;min-width:0}
+  .brand-mark{width:36px;height:36px;display:grid;place-items:center;background:var(--green);color:#fff;border-radius:12px;font-size:20px;box-shadow:0 4px 8px #176b4d25;flex:none}
+  .brand-name{font-size:16px;font-weight:850;letter-spacing:-.03em;line-height:1.1}
+  .brand-sub{font-size:10px;color:var(--muted);margin-top:3px}
+  .lang-switch{border:1px solid var(--line);border-radius:10px;padding:6px 9px;font-size:11px;font-weight:800;background:#fff;color:var(--green);white-space:nowrap}
+  .notice-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;background:#fff5e9;color:#8b5517;border-radius:7px;font-size:10px;font-weight:800;margin-top:13px}
+  .screen{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:15px 15px 22px;scrollbar-width:thin;scrollbar-color:#cbd8cc transparent}
+  .screen::-webkit-scrollbar{width:4px}.screen::-webkit-scrollbar-thumb{background:#cbd8cc;border-radius:20px}
+  .hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#155f42 0%,#207e56 72%,#329567 100%);border-radius:19px;padding:20px 18px 18px;color:#fff;min-height:145px}
+  .hero:before{content:"";width:135px;height:135px;border:1px solid #ffffff22;position:absolute;border-radius:50%;right:-25px;top:8px;box-shadow:0 0 0 17px #ffffff0d,0 0 0 35px #ffffff08}
+  .hero .kicker{font-size:10px;text-transform:uppercase;font-weight:850;letter-spacing:.1em;opacity:.82;position:relative}
+  .hero h2{font-size:23px;line-height:1.13;max-width:230px;letter-spacing:-.04em;margin:9px 0 7px;position:relative}
+  .hero p{font-size:11px;line-height:1.45;max-width:205px;margin:0;opacity:.85;position:relative}
+  .hero-art{position:absolute;right:13px;bottom:13px;font-size:46px;filter:drop-shadow(0 5px 7px #103b2b4a);transform:rotate(-7deg)}
+  .demo-note{display:flex;align-items:flex-start;gap:8px;color:#72603b;background:#fff8e9;border:1px solid #f5e8c7;border-radius:10px;padding:9px 10px;margin:12px 0 16px;font-size:10px;line-height:1.45}
+  .demo-note b{font-size:11px}
+  .search{position:relative;margin:0 0 17px}
+  .search .search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;color:#718077}
+  .search input{width:100%;height:45px;border:1px solid #e2e9df;background:#fff;border-radius:12px;padding:0 13px 0 39px;font-size:12px;color:var(--ink)}
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}
+  .section-head h3{font-size:14px;letter-spacing:-.02em;margin:0;font-weight:850}
+  .text-button{border:0;background:none;color:var(--green);font-size:11px;font-weight:800;padding:6px 0}
+  .categories{display:flex;gap:7px;overflow-x:auto;margin:0 -1px 19px;padding:1px 1px 4px;scrollbar-width:none}
+  .categories::-webkit-scrollbar{display:none}
+  .cat-btn{white-space:nowrap;border:1px solid #dce5db;background:#fff;color:#536259;border-radius:10px;padding:8px 11px;font-size:11px;font-weight:750}
+  .cat-btn.active{background:var(--green);border-color:var(--green);color:#fff}
+  .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .product-card{min-width:0;background:#fff;border:1px solid #e7ece4;border-radius:15px;padding:10px 9px 11px;display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(28,50,32,.025)}
+  .product-art{height:84px;border-radius:11px;display:grid;place-items:center;position:relative;overflow:hidden;margin-bottom:9px}
+  .product-art:before{content:"";position:absolute;width:80px;height:80px;border:1px solid #ffffff70;border-radius:50%;right:-21px;top:-24px}
+  .product-emoji{font-size:37px;filter:drop-shadow(0 4px 3px #24322618);z-index:1}
+  .stock-chip{position:absolute;bottom:6px;left:6px;border-radius:6px;background:#ffffffdb;color:#34443a;font-size:8px;padding:3px 5px;font-weight:800;z-index:1}
+  .product-name{font-weight:800;font-size:11px;line-height:1.3;min-height:29px;letter-spacing:-.01em}
+  .product-size{font-size:9px;color:#79847b;margin-top:3px}
+  .product-bottom{display:flex;justify-content:space-between;gap:5px;align-items:center;margin-top:10px}
+  .price{font-size:13px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+  .add-btn{border:0;background:var(--green);color:#fff;border-radius:9px;min-height:31px;padding:0 9px;font-size:10px;font-weight:850;white-space:nowrap}
+  .stepper{display:flex;align-items:center;gap:7px;background:#e7f3e9;border-radius:9px;padding:3px;color:var(--green);font-size:11px;font-weight:900}
+  .stepper button{width:25px;height:25px;border:0;background:#fff;border-radius:7px;color:var(--green);font-weight:900;font-size:16px;line-height:1}
+  .empty-state{background:#fff;border:1px dashed #d8e3d7;border-radius:16px;padding:28px 18px;text-align:center;color:var(--muted)}
+  .empty-icon{font-size:38px;margin-bottom:8px}.empty-state h3{margin:0 0 6px;font-size:15px;color:var(--ink)}.empty-state p{font-size:11px;line-height:1.55;margin:0 auto 14px;max-width:230px}
+  .primary-btn{width:100%;border:0;background:var(--green);color:#fff;border-radius:12px;padding:14px 15px;font-weight:850;font-size:12px;box-shadow:0 5px 12px #176b4d20}
+  .secondary-btn{width:100%;border:1px solid #dce5db;background:#fff;color:var(--green);border-radius:12px;padding:12px;font-weight:850;font-size:12px}
+  .cart-list{display:grid;gap:9px}
+  .cart-line{background:#fff;border:1px solid var(--line);border-radius:13px;padding:10px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:9px;align-items:center}
+  .cart-art{height:48px;border-radius:11px;display:grid;place-items:center;font-size:25px}
+  .cart-name{font-size:11px;font-weight:850;line-height:1.25}.cart-unit{font-size:9px;color:var(--muted);margin-top:4px}.cart-price{font-size:11px;font-weight:900;text-align:right;margin-bottom:6px}
+  .summary{border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px;margin-top:14px}
+  .summary h3{font-size:13px;margin:0 0 12px}.sum-row{display:flex;justify-content:space-between;gap:10px;color:#67756a;font-size:11px;margin:9px 0}.sum-row strong{color:var(--ink)}.sum-total{border-top:1px solid var(--line);padding-top:11px;margin-top:12px;font-size:13px;color:var(--ink);font-weight:900}
+  .muted-copy{font-size:10px;line-height:1.55;color:var(--muted);margin:11px 0}
+  .page-title{display:flex;align-items:center;gap:10px;margin:1px 0 15px}.back-btn{height:32px;width:32px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--green);font-size:17px}.page-title h2{font-size:19px;letter-spacing:-.04em;margin:0}.page-subtitle{font-size:11px;color:var(--muted);line-height:1.45;margin:-8px 0 15px}
+  .field{display:grid;gap:6px;margin:13px 0}.field label{font-size:11px;font-weight:850;color:#39493e}.field input,.field textarea{width:100%;border:1px solid #dfe7de;background:#fff;border-radius:10px;padding:11px 12px;font-size:12px;color:var(--ink)}.field textarea{min-height:67px;resize:vertical}.optional{color:var(--muted);font-weight:500}
+  .info-panel{border-radius:12px;background:#f0f6ee;border:1px solid #dfebdb;padding:12px;font-size:10px;line-height:1.55;color:#405344;margin:14px 0}.info-panel strong{font-size:11px;display:block;margin-bottom:3px}
+  .order-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px;margin-bottom:10px}.order-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.order-id{font-size:11px;font-weight:900}.status-demo{font-size:9px;font-weight:850;color:#8b5b1d;background:#fff2dc;border-radius:6px;padding:5px 7px}.order-card p{font-size:10px;color:var(--muted);margin:9px 0}.order-bottom{display:flex;justify-content:space-between;font-size:11px;font-weight:800;border-top:1px solid var(--line);padding-top:10px}.order-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:5px}.reorder-btn{border:1px solid #c9dfcf;background:#eaf5ec;color:var(--green);border-radius:9px;min-height:30px;padding:5px 10px;font-size:10px;font-weight:850;white-space:nowrap}
+  .success-mark{width:68px;height:68px;border-radius:23px;background:#dff1e3;color:var(--green);font-size:33px;display:grid;place-items:center;margin:15px auto}
+  .success-title{text-align:center;font-size:22px;letter-spacing:-.04em;margin:0 0 8px}.success-copy{text-align:center;color:var(--muted);font-size:11px;line-height:1.6;max-width:280px;margin:0 auto 18px}
+  .bottom-nav{flex:none;display:grid;grid-template-columns:repeat(3,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
+  .nav-btn{border:0;background:none;color:#829087;border-radius:11px;padding:7px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:800;position:relative}
+  .nav-btn .nav-icon{font-size:18px;line-height:1.1}.nav-btn.active{color:var(--green);background:#f0f7ef}.nav-count{position:absolute;top:1px;left:calc(50% + 7px);background:var(--orange);color:#3e2a14;min-width:14px;height:14px;border-radius:7px;display:grid;place-items:center;font-size:8px;padding:0 3px}
+  .toast{position:absolute;left:15px;right:15px;bottom:76px;z-index:5;background:#17271c;color:white;padding:12px 14px;border-radius:12px;font-size:11px;box-shadow:0 8px 28px #0002;animation:slidein .18s ease-out}
+  @keyframes slidein{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .side-note{align-self:center;max-width:245px;color:#617067;font-size:12px;line-height:1.65}
+  .side-note h3{font-size:14px;color:#243329;margin:0 0 10px}.side-note p{margin:0 0 14px}.legend{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.legend span{font-size:10px;font-weight:800;padding:6px 8px;background:#fff;border:1px solid #e1e8df;border-radius:8px;color:#536258}
+  .hidden{display:none!important}
+  @media(max-width:940px){.shell{grid-template-columns:minmax(320px,460px);justify-content:center;padding:12px}.intro,.side-note{display:none}.phone-wrap{max-width:460px;width:100%}.phone{height:min(890px,calc(100dvh - 24px));min-height:600px}}
+  @media(max-width:480px){html,body{background:#f8faf6}.shell{padding:0;display:block}.phone-wrap{max-width:none}.phone{border:0;border-radius:0;height:100dvh;min-height:540px;box-shadow:none}.statusbar{padding-top:env(safe-area-inset-top);height:calc(22px + env(safe-area-inset-top))}.screen{padding:14px 14px 20px}.hero h2{font-size:22px}}
+  @media(min-width:941px){.phone{height:min(880px,calc(100dvh - 36px))}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="intro">
+    <div class="eyebrow" data-i18n="siteEyebrow">Product prototype · v1</div>
+    <h1 data-i18n="siteTitle">Ordering for the shops that keep Maharashtra moving.</h1>
+    <p data-i18n="siteDescription">A lightweight ordering concept for kirana owners. Designed around quick discovery, simple quantity controls and an English/Marathi experience.</p>
+    <ul class="feature-points">
+      <li><span class="tick">✓</span><span data-i18n="featureLang">English and Marathi interface</span></li>
+      <li><span class="tick">✓</span><span data-i18n="featureSearch">Search, categories and cart</span></li>
+      <li><span class="tick">✓</span><span data-i18n="featureCheckout">Simulated checkout and order history</span></li>
+      <li><span class="tick">✓</span><span data-i18n="featureNoBackend">No account, payment or backend needed to test</span></li>
+    </ul>
+  </aside>
+  <main class="phone-wrap">
+    <div class="phone" role="application" aria-label="Kirana Saathi ordering prototype">
+      <div class="statusbar"><span>9:41</span><span>● ● ●　▰</span></div>
+      <header class="app-top">
+        <div class="brand-row">
+          <div class="brand"><div class="brand-mark">⌂</div><div><div class="brand-name" data-i18n="brand">Kirana Saathi</div><div class="brand-sub" data-i18n="brandSub">Ordering made simple</div></div></div>
+          <button id="langToggle" class="lang-switch" aria-label="Switch language">मराठी</button>
+        </div>
+        <div class="notice-pill"><span>●</span><span data-i18n="demoBadge">DEMO MODE</span></div>
+      </header>
+      <div id="screen" class="screen" aria-live="polite"></div>
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <button class="nav-btn active" data-page="home"><span class="nav-icon">⌂</span><span data-i18n="navHome">Home</span></button>
+        <button class="nav-btn" data-page="orders"><span class="nav-icon">▤</span><span data-i18n="navOrders">Orders</span></button>
+        <button class="nav-btn" data-page="cart"><span class="nav-icon">🛒</span><span data-i18n="navCart">Cart</span><span id="navCount" class="nav-count hidden">0</span></button>
+      </nav>
+      <div id="toast" class="toast hidden" role="status"></div>
+    </div>
+  </main>
+  <aside class="side-note">
+    <h3 data-i18n="boundariesTitle">Prototype boundaries</h3>
+    <p data-i18n="boundariesText">Catalogue items and prices are illustrative demo data. There is no live supplier catalogue, stock check, payment, delivery promise or order submission.</p>
+    <p data-i18n="boundariesTest">Use the language control in the app to test both interfaces. Add a few items and complete a demo checkout to see the order flow.</p>
+    <div class="legend"><span data-i18n="tagMobile">Mobile-first</span><span data-i18n="tagLowData">Low-data UI</span><span data-i18n="tagBilingual">Bilingual</span><span data-i18n="tagDemo">Demo only</span></div>
+  </aside>
+</div>
+<script>
+(() => {
+  const I18N = {
+    en: {
+      pageTitle:'Kirana Saathi — Ordering Prototype', siteEyebrow:'Product prototype · v1', siteTitle:'Ordering for the shops that keep Maharashtra moving.', siteDescription:'A lightweight ordering concept for kirana owners. Designed around quick discovery, simple quantity controls and an English/Marathi experience.', featureLang:'English and Marathi interface', featureSearch:'Search, categories and cart', featureCheckout:'Simulated checkout and order history', featureNoBackend:'No account, payment or backend needed to test', boundariesTitle:'Prototype boundaries', boundariesText:'Catalogue items and prices are illustrative demo data. There is no live supplier catalogue, stock check, payment, delivery promise or order submission.', boundariesTest:'Use the language control in the app to test both interfaces. Add a few items and complete a demo checkout to see the order flow.', tagMobile:'Mobile-first', tagLowData:'Low-data UI', tagBilingual:'Bilingual', tagDemo:'Demo only', phoneAria:'Kirana Saathi ordering prototype', languageAria:'Switch language', navAria:'Main navigation', backAria:'Back', decrease:'Decrease quantity', increase:'Increase quantity', cartFoot:'Delivery and other charges are not included.',
+      brand:'Kirana Saathi', brandSub:'Ordering made simple', demoBadge:'DEMO MODE', navHome:'Home', navOrders:'Orders', navCart:'Cart',
+      heroKicker:'For your everyday business', heroTitle:'Stock up. Stay ready.', heroText:'Everyday essentials for your shop, in a few simple steps.',
+      demoNote:'Demo catalogue', demoNoteText:'Products and prices are illustrative only. Supplier pricing and availability are unknown.', search:'Search products', categories:'Browse categories', all:'All items', staples:'Staples', snacks:'Snacks', beverages:'Beverages', homecare:'Home care', personal:'Personal care', featured:'Everyday essentials', seeAll:'See all', add:'Add', added:'Added', perPack:'per pack', noResults:'No products found', noResultsText:'Try a different search or category.',
+      cartTitle:'Your cart', cartSub:'Review quantities before checkout.', emptyCart:'Your cart is empty', emptyCartText:'Add a few everyday essentials to start a demo order.', browseProducts:'Browse products', orderSummary:'Order summary', subtotal:'Item subtotal', delivery:'Delivery', deliveryUnknown:'Unknown', total:'Estimated total', checkout:'Continue to checkout', remove:'Remove',
+      checkoutTitle:'Review order', checkoutSub:'This is a simulation. Nothing will be ordered or charged.', storeName:'Shop name', optional:'(optional)', address:'Delivery address', addressPlaceholder:'Enter a sample address for this demo', required:'Required for this demo', checkoutNoticeTitle:'Payment & delivery not configured', checkoutNotice:'Actual payment methods, delivery coverage, fees and supplier confirmation are unknown and must be validated before launch.', placeDemo:'Place demo order', backToCart:'Back to cart', privacy:'Cart items are saved locally in this browser; your address is not sent to a server.',
+      successTitle:'Demo order placed!', successText:'Your sample order has been created in this prototype only. No supplier has received it and no payment or delivery has been arranged.', orderId:'Demo order', viewOrders:'View order history', backHome:'Back to home', ordersTitle:'Order history', ordersSub:'Orders completed in this demo session.', noOrders:'No orders yet', noOrdersText:'Your demo orders will appear here after you complete checkout.', startOrder:'Start an order', demoStatus:'DEMO ONLY', items:'items', orderDetails:'Order details', newOrder:'Create another order', addressMissing:'Please enter a sample delivery address to continue.', addedToast:'Added to cart', updatedToast:'Cart updated', removedToast:'Item removed', languageChanged:'Language updated',
+      catalogFoot:'Illustrative prices · Not supplier quotes', qty:'Qty', sampleAddress:'Demo address', reviewItems:'Review items', demoId:'KS-DEMO',
+      reorder:'Reorder', reorderToast:'Items from this order were added to your cart. Review or edit quantities before checkout.', reorderUnavailable:'This order could not be reordered. Please try again.'
+    },
+    mr: {
+      pageTitle:'किराणा साथी — ऑर्डर प्रोटोटाइप', siteEyebrow:'प्रोटोटाइप · आवृत्ती १', siteTitle:'महाराष्ट्रातील दुकानांसाठी सोपी ऑर्डर व्यवस्था.', siteDescription:'किराणा दुकानदारांसाठी सोपी ऑर्डर संकल्पना. वस्तू पटकन शोधा, प्रमाण निवडा आणि मराठी किंवा इंग्रजीत ऑर्डरचा सराव करा.', featureLang:'मराठी आणि इंग्रजी इंटरफेस', featureSearch:'शोध, प्रकार आणि कार्ट', featureCheckout:'डेमो चेकआउट आणि ऑर्डर इतिहास', featureNoBackend:'चाचणीसाठी खाते, पेमेंट किंवा बॅकएंडची गरज नाही', boundariesTitle:'प्रोटोटाइपच्या मर्यादा', boundariesText:'वस्तू आणि किमती केवळ डेमोसाठी आहेत. प्रत्यक्ष पुरवठादारांची यादी, साठा, पेमेंट, डिलिव्हरीची हमी किंवा ऑर्डर पाठवण्याची सुविधा नाही.', boundariesTest:'दोन्ही भाषा तपासण्यासाठी अॅपमधील भाषा बदला. काही वस्तू जोडा आणि डेमो चेकआउट पूर्ण करून पाहा.', tagMobile:'मोबाइलसाठी सोपे', tagLowData:'कमी डेटा वापर', tagBilingual:'द्विभाषिक', tagDemo:'फक्त डेमो', phoneAria:'किराणा साथी ऑर्डर प्रोटोटाइप', languageAria:'भाषा बदला', navAria:'मुख्य नेव्हिगेशन', backAria:'मागे', decrease:'प्रमाण कमी करा', increase:'प्रमाण वाढवा', cartFoot:'डिलिव्हरी आणि इतर शुल्क यात समाविष्ट नाहीत.',
+      brand:'किराणा साथी', brandSub:'ऑर्डर करणे आता सोपे', demoBadge:'डेमो मोड', navHome:'मुख्यपृष्ठ', navOrders:'ऑर्डर्स', navCart:'कार्ट',
+      heroKicker:'तुमच्या रोजच्या व्यवसायासाठी', heroTitle:'साठा भरा. तयार राहा.', heroText:'तुमच्या दुकानासाठी रोजच्या गरजेच्या वस्तू, काही सोप्या टप्प्यांत.',
+      demoNote:'डेमो कॅटलॉग', demoNoteText:'वस्तू आणि किमती केवळ उदाहरणासाठी आहेत. पुरवठादारांच्या किमती आणि उपलब्धता अज्ञात आहेत.', search:'वस्तू शोधा', categories:'प्रकार निवडा', all:'सर्व वस्तू', staples:'धान्य व किराणा', snacks:'खाऊ', beverages:'पेय', homecare:'घराची स्वच्छता', personal:'वैयक्तिक निगा', featured:'रोजच्या गरजेच्या वस्तू', seeAll:'सर्व पहा', add:'जोडा', added:'जोडले', perPack:'प्रति पॅक', noResults:'वस्तू सापडल्या नाहीत', noResultsText:'दुसरा शब्द किंवा प्रकार निवडून पाहा.',
+      cartTitle:'तुमचा कार्ट', cartSub:'पुढे जाण्यापूर्वी प्रमाण तपासा.', emptyCart:'तुमचा कार्ट रिकामा आहे', emptyCartText:'डेमो ऑर्डर सुरू करण्यासाठी काही वस्तू जोडा.', browseProducts:'वस्तू पाहा', orderSummary:'ऑर्डरचा सारांश', subtotal:'वस्तूंची बेरीज', delivery:'डिलिव्हरी', deliveryUnknown:'अज्ञात', total:'अंदाजे एकूण', checkout:'चेकआउटकडे जा', remove:'काढा',
+      checkoutTitle:'ऑर्डर तपासा', checkoutSub:'हे फक्त प्रात्यक्षिक आहे. प्रत्यक्ष ऑर्डर किंवा पैसे आकारले जाणार नाहीत.', storeName:'दुकानाचे नाव', optional:'(पर्यायी)', address:'डिलिव्हरीचा पत्ता', addressPlaceholder:'या डेमोसाठी नमुना पत्ता लिहा', required:'या डेमोसाठी आवश्यक', checkoutNoticeTitle:'पेमेंट आणि डिलिव्हरी सेट केलेली नाही', checkoutNotice:'प्रत्यक्ष पेमेंट पद्धती, डिलिव्हरी क्षेत्र, शुल्क आणि पुरवठादाराची पुष्टी अज्ञात आहेत. सुरू करण्यापूर्वी त्यांची पडताळणी आवश्यक आहे.', placeDemo:'डेमो ऑर्डर द्या', backToCart:'कार्टकडे परत', privacy:'कार्टमधील वस्तू या ब्राउझरमध्ये स्थानिकरीत्या जतन होतात; तुमचा पत्ता सर्व्हरवर पाठवला जात नाही.',
+      successTitle:'डेमो ऑर्डर तयार!', successText:'तुमची नमुना ऑर्डर फक्त या प्रोटोटाइपमध्ये तयार झाली आहे. कोणत्याही पुरवठादाराला ऑर्डर मिळालेली नाही; पेमेंट किंवा डिलिव्हरी ठरलेली नाही.', orderId:'डेमो ऑर्डर', viewOrders:'ऑर्डर इतिहास पाहा', backHome:'मुख्यपृष्ठावर जा', ordersTitle:'ऑर्डर इतिहास', ordersSub:'या डेमो सत्रात तयार झालेल्या ऑर्डर्स.', noOrders:'अजून ऑर्डर्स नाहीत', noOrdersText:'चेकआउट पूर्ण केल्यानंतर तुमच्या डेमो ऑर्डर्स येथे दिसतील.', startOrder:'ऑर्डर सुरू करा', demoStatus:'फक्त डेमो', items:'वस्तू', orderDetails:'ऑर्डर तपशील', newOrder:'आणखी ऑर्डर करा', addressMissing:'पुढे जाण्यासाठी नमुना डिलिव्हरी पत्ता लिहा.', addedToast:'कार्टमध्ये जोडले', updatedToast:'कार्ट अपडेट केला', removedToast:'वस्तू काढली', languageChanged:'भाषा बदलली',
+      catalogFoot:'उदाहरणार्थ किमती · पुरवठादाराचे दर नाहीत', qty:'प्रमाण', sampleAddress:'नमुना पत्ता', reviewItems:'वस्तू तपासा', demoId:'KS-DEMO',
+      reorder:'पुन्हा ऑर्डर करा', reorderToast:'या ऑर्डरमधील वस्तू तुमच्या कार्टमध्ये जोडल्या आहेत. चेकआउटपूर्वी प्रमाण तपासा किंवा बदला.', reorderUnavailable:'ही ऑर्डर पुन्हा करता आली नाही. कृपया पुन्हा प्रयत्न करा.'
+    }
+  };
+  const products = [
+    {id:'salt',name:{en:'Iodised Salt',mr:'आयोडीनयुक्त मीठ'},size:{en:'1 kg pack',mr:'१ किलो पॅक'},cat:'staples',price:28,emoji:'🧂',bg:'#f2eee5'},
+    {id:'dal',name:{en:'Toor Dal',mr:'तूर डाळ'},size:{en:'1 kg pack',mr:'१ किलो पॅक'},cat:'staples',price:145,emoji:'🫘',bg:'#f8e5c9'},
+    {id:'oil',name:{en:'Sunflower Oil',mr:'सूर्यफूल तेल'},size:{en:'1 litre bottle',mr:'१ लिटर बाटली'},cat:'staples',price:135,emoji:'🫙',bg:'#fff0b9'},
+    {id:'rice',name:{en:'Everyday Rice',mr:'रोजचा तांदूळ'},size:{en:'5 kg bag',mr:'५ किलो पिशवी'},cat:'staples',price:300,emoji:'🍚',bg:'#eee8dc'},
+    {id:'biscuits',name:{en:'Glucose Biscuits',mr:'ग्लुकोज बिस्किटे'},size:{en:'250 g pack',mr:'२५० ग्रॅम पॅक'},cat:'snacks',price:25,emoji:'🍪',bg:'#f4dfcb'},
+    {id:'chips',name:{en:'Potato Chips',mr:'बटाट्याचे चिप्स'},size:{en:'52 g pack',mr:'५२ ग्रॅम पॅक'},cat:'snacks',price:20,emoji:'🥔',bg:'#fbe8bc'},
+    {id:'tea',name:{en:'Tea Powder',mr:'चहा पावडर'},size:{en:'250 g pack',mr:'२५० ग्रॅम पॅक'},cat:'beverages',price:95,emoji:'🍵',bg:'#e5e9d7'},
+    {id:'juice',name:{en:'Mango Drink',mr:'आंबा पेय'},size:{en:'200 ml bottle',mr:'२०० मिली बाटली'},cat:'beverages',price:20,emoji:'🥭',bg:'#ffe2a1'},
+    {id:'dishbar',name:{en:'Dishwash Bar',mr:'भांडी घासायचा साबण'},size:{en:'200 g bar',mr:'२०० ग्रॅम वडी'},cat:'homecare',price:30,emoji:'🧼',bg:'#dceef2'},
+    {id:'detergent',name:{en:'Detergent Powder',mr:'कपडे धुण्याची पावडर'},size:{en:'1 kg pack',mr:'१ किलो पॅक'},cat:'homecare',price:85,emoji:'🫧',bg:'#e0e9fa'},
+    {id:'soap',name:{en:'Bath Soap',mr:'अंघोळीचा साबण'},size:{en:'4 bar pack',mr:'४ साबणांचा पॅक'},cat:'personal',price:120,emoji:'🧴',bg:'#f2e3f4'},
+    {id:'shampoo',name:{en:'Shampoo Sachets',mr:'शॅम्पू सॅशे'},size:{en:'1 display strip',mr:'१ डिस्प्ले स्ट्रिप'},cat:'personal',price:60,emoji:'🧴',bg:'#dcece7'}
+  ];
+  const CART_STORAGE_KEY = 'kiranaSaathiCart_v1';
+  function loadCart(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '{}');
+      if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return {};
+      const restored = {};
+      products.forEach(product => {
+        const qty = saved[product.id];
+        if (Number.isSafeInteger(qty) && qty > 0) restored[product.id] = qty;
+      });
+      return restored;
+    } catch (_) { return {}; }
+  }
+  let lang='en', page='home', category='all', query='', cart=loadCart(), orders=[], latestOrder=null, toastTimer=null;
+  const $ = s => document.querySelector(s);
+  const t = key => I18N[lang][key] || key;
+  const money = n => '₹' + Number(n).toLocaleString('en-IN');
+  const escaped = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const cartCount = () => Object.values(cart).reduce((a,b)=>a+b,0);
+  function saveCart(){
+    try {
+      if (cartCount() === 0) localStorage.removeItem(CART_STORAGE_KEY);
+      else localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch (_) { /* Storage may be unavailable; keep the in-memory cart usable. */ }
+  }
+  const subtotal = () => products.reduce((sum,p)=>sum+(cart[p.id]||0)*p.price,0);
+  const formatOrderDate = o => new Date(o.createdAt || Date.now()).toLocaleDateString(lang==='mr'?'mr-IN':'en-IN',{day:'numeric',month:'short',year:'numeric'});
+  function updateSharedText(){document.documentElement.lang=lang==='mr'?'mr':'en';document.title=t('pageTitle');document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;el.textContent=t(k)});$('#langToggle').textContent=lang==='en'?'मराठी':'English';$('#langToggle').setAttribute('aria-label',t('languageAria'));$('.phone').setAttribute('aria-label',t('phoneAria'));$('.bottom-nav').setAttribute('aria-label',t('navAria'));$('#navCount').textContent=cartCount();$('#navCount').classList.toggle('hidden',cartCount()===0);document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));}
+  function showToast(msg){const el=$('#toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2100)}
+  function header(title,sub,back=true){return `<div class="page-title">${back?`<button class="back-btn" data-action="back" aria-label="${t('backAria')}">‹</button>`:''}<div><h2>${title}</h2></div></div>${sub?`<p class="page-subtitle">${sub}</p>`:''}`}
+  function renderHome(){
+    const cats=[['all',t('all')],['staples',t('staples')],['snacks',t('snacks')],['beverages',t('beverages')],['homecare',t('homecare')],['personal',t('personal')]];
+    const list=products.filter(p=>(category==='all'||p.cat===category)&&(!query||p.name.en.toLowerCase().includes(query.toLowerCase())||p.name.mr.toLowerCase().includes(query.toLowerCase())||(p.size.en.toLowerCase().includes(query.toLowerCase())||p.size.mr.toLowerCase().includes(query.toLowerCase()))));
+    return `<section class="hero"><div class="kicker">${t('heroKicker')}</div><h2>${t('heroTitle')}</h2><p>${t('heroText')}</p><div class="hero-art" aria-hidden="true">🛍️</div></section>
+      <div class="demo-note"><span>ⓘ</span><div><b>${t('demoNote')}</b><br>${t('demoNoteText')}</div></div>
+      <label class="search"><span class="search-icon">⌕</span><input id="searchInput" type="search" autocomplete="off" value="${escaped(query)}" placeholder="${t('search')}" aria-label="${t('search')}" /></label>
+      <div class="section-head"><h3>${t('categories')}</h3></div><div class="categories">${cats.map(([id,label])=>`<button class="cat-btn ${category===id?'active':''}" data-category="${id}">${label}</button>`).join('')}</div>
+      <div class="section-head"><h3>${query? t('search'):t('featured')}</h3><button class="text-button" data-action="all">${t('seeAll')}</button></div>
+      ${list.length?`<div class="product-grid">${list.map(p=>productCard(p)).join('')}</div>`:`<div class="empty-state"><div class="empty-icon">🔎</div><h3>${t('noResults')}</h3><p>${t('noResultsText')}</p><button class="secondary-btn" data-action="clearSearch">${t('seeAll')}</button></div>`}
+      <p class="muted-copy" style="text-align:center;margin-top:16px">${t('catalogFoot')}</p>`;
+  }
+  function productCard(p){const n=cart[p.id]||0;return `<article class="product-card"><div class="product-art" style="background:${p.bg}"><span class="product-emoji">${p.emoji}</span><span class="stock-chip">${t('demoBadge')}</span></div><div class="product-name">${p.name[lang]}</div><div class="product-size">${p.size[lang]}</div><div class="product-bottom"><div class="price">${money(p.price)}</div>${n?`<div class="stepper"><button data-action="dec" data-id="${p.id}" aria-label="${t('decrease')} — ${p.name[lang]}">−</button><span>${n}</span><button data-action="inc" data-id="${p.id}" aria-label="${t('increase')} — ${p.name[lang]}">+</button></div>`:`<button class="add-btn" data-action="add" data-id="${p.id}">+ ${t('add')}</button>`}</div></article>`}
+  function renderCart(){const lines=products.filter(p=>cart[p.id]);if(!lines.length)return `${header(t('cartTitle'),t('cartSub'),false)}<div class="empty-state"><div class="empty-icon">🛒</div><h3>${t('emptyCart')}</h3><p>${t('emptyCartText')}</p><button class="primary-btn" data-action="home">${t('browseProducts')}</button></div>`;
+    return `${header(t('cartTitle'),t('cartSub'),false)}<div class="cart-list">${lines.map(p=>`<div class="cart-line"><div class="cart-art" style="background:${p.bg}">${p.emoji}</div><div><div class="cart-name">${p.name[lang]}</div><div class="cart-unit">${p.size[lang]} · ${money(p.price)}</div><div class="stepper" style="width:max-content;margin-top:8px"><button data-action="dec" data-id="${p.id}" aria-label="${t('decrease')}">−</button><span>${cart[p.id]}</span><button data-action="inc" data-id="${p.id}" aria-label="${t('increase')}">+</button></div></div><div><div class="cart-price">${money(p.price*cart[p.id])}</div><button class="text-button" style="color:#a74c42" data-action="remove" data-id="${p.id}">${t('remove')}</button></div></div>`).join('')}</div>
+      <div class="summary"><h3>${t('orderSummary')}</h3><div class="sum-row"><span>${t('subtotal')}</span><strong>${money(subtotal())}</strong></div><div class="sum-row"><span>${t('delivery')}</span><strong>${t('deliveryUnknown')}</strong></div><div class="sum-row sum-total"><span>${t('total')}</span><strong>${money(subtotal())}*</strong></div><p class="muted-copy">* ${t('catalogFoot')}. ${t('cartFoot')}</p><button class="primary-btn" data-action="checkout">${t('checkout')} →</button></div>`;
+  }
+  function renderCheckout(){return `${header(t('checkoutTitle'),t('checkoutSub'))}<div class="summary" style="margin-top:0"><h3>${t('reviewItems')}</h3>${products.filter(p=>cart[p.id]).map(p=>`<div class="sum-row"><span>${p.name[lang]} × ${cart[p.id]}</span><strong>${money(p.price*cart[p.id])}</strong></div>`).join('')}<div class="sum-row sum-total"><span>${t('total')}</span><strong>${money(subtotal())}*</strong></div></div>
+      <form id="checkoutForm" novalidate><div class="field"><label for="storeName">${t('storeName')} <span class="optional">${t('optional')}</span></label><input id="storeName" name="storeName" maxlength="70" placeholder="${lang==='en'?'e.g. Sai General Stores':'उदा. साई जनरल स्टोअर्स'}" /></div><div class="field"><label for="address">${t('address')} <span style="color:#bc4444">*</span></label><textarea id="address" name="address" required maxlength="220" placeholder="${t('addressPlaceholder')}"></textarea></div>
+      <div class="info-panel"><strong>ⓘ ${t('checkoutNoticeTitle')}</strong>${t('checkoutNotice')}</div><button class="primary-btn" type="submit">${t('placeDemo')} →</button><button class="secondary-btn" type="button" style="margin-top:9px" data-action="cart">${t('backToCart')}</button><p class="muted-copy">${t('privacy')}</p></form>`;}
+  function renderOrders(){if(!orders.length)return `${header(t('ordersTitle'),t('ordersSub'),false)}<div class="empty-state"><div class="empty-icon">📋</div><h3>${t('noOrders')}</h3><p>${t('noOrdersText')}</p><button class="primary-btn" data-action="home">${t('startOrder')}</button></div>`;
+    return `${header(t('ordersTitle'),t('ordersSub'),false)}${orders.slice().reverse().map(o=>`<article class="order-card"><div class="order-head"><span class="order-id">${t('orderId')} #${o.id}</span><span class="status-demo">${t('demoStatus')}</span></div><p>${formatOrderDate(o)} · ${o.count} ${t('items')} · ${escaped(o.store||t('sampleAddress'))}</p><div class="order-bottom"><span>${t('total')}</span><strong>${money(o.total)}*</strong></div><div class="order-actions"><button class="text-button" data-action="orderDetail" data-id="${o.id}">${t('orderDetails')} →</button><button class="reorder-btn" data-action="reorder" data-id="${o.id}" aria-label="${t('reorder')} ${t('orderId')} #${o.id}">↻ ${t('reorder')}</button></div></article>`).join('')}<button class="primary-btn" data-action="home">${t('newOrder')}</button>`;
+  }
+  function renderSuccess(){const o=latestOrder;return `<div class="success-mark">✓</div><h2 class="success-title">${t('successTitle')}</h2><p class="success-copy">${t('successText')}</p><div class="summary"><div class="sum-row"><span>${t('orderId')}</span><strong>${o?o.id:'—'}</strong></div><div class="sum-row"><span>${t('items')}</span><strong>${o?o.count:0}</strong></div><div class="sum-row sum-total"><span>${t('total')}</span><strong>${money(o?o.total:0)}*</strong></div></div><div class="info-panel">ⓘ ${t('demoNoteText')}</div><button class="primary-btn" data-action="orders">${t('viewOrders')}</button><button class="secondary-btn" style="margin-top:9px" data-action="home">${t('backHome')}</button>`}
+  function renderOrderDetail(id){const o=orders.find(x=>String(x.id)===String(id));if(!o)return renderOrders();return `${header(t('orderDetails'),t('demoStatus'))}<div class="order-card"><div class="order-head"><span class="order-id">${t('orderId')} #${o.id}</span><span class="status-demo">${t('demoStatus')}</span></div><p>${formatOrderDate(o)} · ${escaped(o.store||t('sampleAddress'))}</p>${o.items.map(it=>`<div class="sum-row"><span>${it.name[lang]} × ${it.qty}</span><strong>${money(it.price*it.qty)}</strong></div>`).join('')}<div class="sum-row sum-total"><span>${t('total')}</span><strong>${money(o.total)}*</strong></div><p class="muted-copy">${t('successText')}</p></div><button class="primary-btn" data-action="home">${t('backHome')}</button>`}
+  function render(options={}){updateSharedText();const screen=$('#screen');const previousScroll=screen.scrollTop;screen.innerHTML=page==='home'?renderHome():page==='cart'?renderCart():page==='checkout'?renderCheckout():page==='orders'?renderOrders():page==='success'?renderSuccess():page.startsWith('detail:')?renderOrderDetail(page.split(':')[1]):renderHome();updateSharedText();screen.scrollTop=options.preserveViewport?previousScroll:0;}
+  function go(next){page=next;render()}
+  function add(id){cart[id]=(cart[id]||0)+1;saveCart();updateSharedText();render();showToast(t('addedToast'))}
+  function changeQty(id,delta){cart[id]=(cart[id]||0)+delta;if(cart[id]<=0)delete cart[id];saveCart();render();showToast(t('updatedToast'))}
+  function reorderOrder(id){
+    const order=orders.find(o=>String(o.id)===String(id));
+    if(!order||!Array.isArray(order.items)){showToast(t('reorderUnavailable'));return}
+    let addedQuantity=0;
+    order.items.forEach(item=>{
+      const product=products.find(p=>p.id===item.id);
+      const qty=Number(item.qty);
+      if(product&&Number.isInteger(qty)&&qty>0){cart[product.id]=(cart[product.id]||0)+qty;addedQuantity+=qty;}
+    });
+    if(!addedQuantity){showToast(t('reorderUnavailable'));return;}
+    saveCart();
+    go('cart');
+    showToast(t('reorderToast'));
+  }
+  $('#langToggle').addEventListener('click',()=>{const storeName=$('#storeName')?.value;const address=$('#address')?.value;lang=lang==='en'?'mr':'en';render({preserveViewport:true});if(storeName!==undefined&&$('#storeName'))$('#storeName').value=storeName;if(address!==undefined&&$('#address'))$('#address').value=address;showToast(t('languageChanged'))});
+  document.querySelector('.bottom-nav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b)return;if(b.dataset.page==='cart')go('cart');else if(b.dataset.page==='orders')go('orders');else go('home')});
+  $('#screen').addEventListener('input',e=>{if(e.target.id==='searchInput'){const pos=e.target.selectionStart;query=e.target.value;const y=$('#screen').scrollTop;const cursor=pos;const inp=e.target;const start=inp.selectionStart;const end=inp.selectionEnd;const oldY=y;const list=products.filter(p=>(category==='all'||p.cat===category)&&(!query||p.name.en.toLowerCase().includes(query.toLowerCase())||p.name.mr.toLowerCase().includes(query.toLowerCase())||(p.size.en.toLowerCase().includes(query.toLowerCase())||p.size.mr.toLowerCase().includes(query.toLowerCase()))));const grid=$('#screen');const scroll=grid.scrollTop;const temp=document.createElement('div');temp.innerHTML=renderHome();grid.innerHTML=temp.innerHTML;grid.scrollTop=scroll;const next=$('#searchInput');next.focus();next.setSelectionRange(start,end);}});
+  $('#screen').addEventListener('click',e=>{const cat=e.target.closest('[data-category]');if(cat){category=cat.dataset.category;render();return}const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action,id=b.dataset.id;
+    if(a==='add'){add(id)}else if(a==='inc'){changeQty(id,1)}else if(a==='dec'){changeQty(id,-1)}else if(a==='remove'){delete cart[id];saveCart();render();showToast(t('removedToast'))}else if(a==='home'){query='';category='all';go('home')}else if(a==='cart'){go('cart')}else if(a==='checkout'){go('checkout')}else if(a==='orders'){go('orders')}else if(a==='all'){category='all';query='';render()}else if(a==='clearSearch'){query='';category='all';render()}else if(a==='back'){if(page==='checkout')go('cart');else if(page.startsWith('detail:'))go('orders');else go('home')}else if(a==='orderDetail'){go('detail:'+id)}else if(a==='reorder'){reorderOrder(id)}
+  });
+  $('#screen').addEventListener('submit',e=>{if(e.target.id!=='checkoutForm')return;e.preventDefault();const address=$('#address').value.trim();if(!address){showToast(t('addressMissing'));$('#address').focus();return}const items=products.filter(p=>cart[p.id]).map(p=>({id:p.id,name:{...p.name},price:p.price,qty:cart[p.id]}));const o={id:String(Date.now()).slice(-6),createdAt:Date.now(),count:cartCount(),total:subtotal(),store:$('#storeName').value.trim(),address,items};orders.push(o);latestOrder=o;cart={};saveCart();go('success');});
+  render();
+})();
+</script>
+</body>
+</html>
